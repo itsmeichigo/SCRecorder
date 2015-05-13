@@ -176,7 +176,7 @@ extern const NSString *SCRecordSessionCacheDirectory;
 /**
  Merge the recorded record segments using the given AVAssetExportSessionPreset.
  */
-- (void)mergeSegmentsUsingPreset:(NSString *)exportSessionPreset completionHandler:(void(^)(NSURL *outputUrl, NSError *error))completionHandler;
+- (void)mergeSegmentsUsingPreset:(NSString *)exportSessionPreset preferredTransform:(CGAffineTransform)transform completionHandler:(void(^)(NSURL *outputUrl, NSError *error))completionHandler;
 
 /**
  Returns an asset representing all the record segments

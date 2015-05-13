@@ -24,6 +24,12 @@ NSString *SCRecordSessionDirectoryKey = @"Directory";
 NSString *SCRecordSessionTemporaryDirectory = @"TemporaryDirectory";
 NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
 
+@interface SCRecordSession()
+
+@property (assign, nonatomic) CGAffineTransform preferredTransform;
+
+@end
+
 @implementation SCRecordSession
 
 - (id)initWithDictionaryRepresentation:(NSDictionary *)dictionaryRepresentation {
@@ -544,7 +550,10 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
     }
 }
 
-- (void)mergeSegmentsUsingPreset:(NSString *)exportSessionPreset completionHandler:(void(^)(NSURL *outputUrl, NSError *error))completionHandler {
+- (void)mergeSegmentsUsingPreset:(NSString *)exportSessionPreset preferredTransform:(CGAffineTransform)transform completionHandler:(void(^)(NSURL *outputUrl, NSError *error))completionHandler {
+    
+    self.preferredTransform = transform;
+    
     [self dispatchSyncOnSessionQueue:^{
         NSString *fileType = [self _suggestedFileType];
         
@@ -570,7 +579,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
         NSString *filename = [NSString stringWithFormat:@"%@SCVideo-Merged.%@", _identifier, fileExtension];
         NSURL *outputUrl = [SCRecordSession segmentURLForFilename:filename andDirectory:_recordSegmentsDirectory];
         [self removeFile:outputUrl];
-
+        
         if (_segments.count == 0) {
             if (completionHandler != nil) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -595,7 +604,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
                     }
                 }];
             });
-
+            
         }
     }];
 }
@@ -775,7 +784,7 @@ NSString *SCRecordSessionCacheDirectory = @"CacheDirectory";
             for (AVAssetTrack *videoAssetTrack in videoAssetTracks) {
                 if (videoTrack == nil) {
                     videoTrack = [composition addMutableTrackWithMediaType:AVMediaTypeVideo preferredTrackID:kCMPersistentTrackID_Invalid];
-                    videoTrack.preferredTransform = videoAssetTrack.preferredTransform;
+                    videoTrack.preferredTransform = self.preferredTransform;
                 }
                 
                 videoTime = [self _appendTrack:videoAssetTrack toCompositionTrack:videoTrack atTime:videoTime withBounds:maxBounds];
