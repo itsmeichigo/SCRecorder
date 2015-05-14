@@ -92,11 +92,6 @@
 @property (readonly, nonatomic) BOOL isAdjustingFocus;
 
 /**
- Disable audio record. Default is NO.
- */
-@property (assign, nonatomic) BOOL recordAudioDisabled;
-
-/**
  The session preset used for the AVCaptureSession
  */
 @property (copy, nonatomic) NSString *captureSessionPreset;

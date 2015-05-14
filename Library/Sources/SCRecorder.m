@@ -83,9 +83,6 @@
         _audioConfiguration = [SCAudioConfiguration new];
         _photoConfiguration = [SCPhotoConfiguration new];
         
-        if (_recordAudioDisabled) {
-            [_audioConfiguration setEnabled:NO];
-        }
         [_videoConfiguration addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:SCRecorderVideoEnabledContext];
         [_audioConfiguration addObserver:self forKeyPath:@"enabled" options:NSKeyValueObservingOptionNew context:SCRecorderAudioEnabledContext];
         [_photoConfiguration addObserver:self forKeyPath:@"options" options:NSKeyValueObservingOptionNew context:SCRecorderPhotoOptionsContext];
